@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>File List</title>
+    <script>
+        // Function to fetch the list of files from the PHP script
+        function fetchFiles() {
+            // Make an AJAX request to the PHP script
+            fetch('list_files.php')
+                .then(response => response.json())
+                .then(data => {
+                    // Get the container to display the list
+                    const fileListContainer = document.getElementById('fileList');
+                    fileListContainer.innerHTML = ''; // Clear any previous content
+
+                    if (data.error) {
+                        // If there is an error, display the error message
+                        fileListContainer.innerHTML = `<p style="color: red;">Error: ${data.error}</p>`;
+                    } else if (data.message) {
+                        // If there is a message (e.g., "No files found"), display the message
+                        fileListContainer.innerHTML = `<p>${data.message}</p>`;
+                    } else {
+                        // If there are files, display them in a list
+                        const ul = document.createElement('ul');
+                        data.forEach(file => {
+                            const li = document.createElement('li');
+                            li.textContent = file;
+                            ul.appendChild(li);
+                        });
+                        fileListContainer.appendChild(ul);
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                });
+        }
+
+        // Call the function when the page loads
+        window.onload = fetchFiles;
+    </script>
+</head>
+<body>
+    <h1>Uploaded Files</h1>
+    <div id="fileList">
+        <!-- List of files will be displayed here -->
+    </div>
+</body>
+</html>
