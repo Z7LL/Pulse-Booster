@@ -1,1 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>File List</title>
+</head>
+<body>
+    <h1>Uploaded Files</h1>
+    <ul id="fileList"></ul>
 
+    <script>
+        // Fetch the list of files from the server
+        fetch('uploads.php') // Replace 'uploads.php' with the correct path to the PHP file
+            .then(response => response.json())
+            .then(data => {
+                const fileList = document.getElementById('fileList');
+                
+                if (data.error || data.message) {
+                    fileList.innerHTML = `<li>${data.error || data.message}</li>`;
+                } else {
+                    // Loop through the files and display them
+                    data.forEach(file => {
+                        const listItem = document.createElement('li');
+                        listItem.textContent = file;
+                        fileList.appendChild(listItem);
+                    });
+                }
+            })
+            .catch(error => {
+                console.error('Error fetching file list:', error);
+                document.getElementById('fileList').innerHTML = '<li>Error fetching file list.</li>';
+            });
+    </script>
+</body>
+</html>
